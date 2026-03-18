@@ -1,145 +1,92 @@
-import { useState } from "react";
-import "../App.css";
-
 function Form() {
-  const [formData, setFormData] = useState({
-    name: "",
-    currentLocation: "",
-    dailySpecial: "",
-    slogan: "",
-    hasVeganOptions: false,
-    priceLevel: 1,
-    rating: 0,
-  });
-
-  // Send form data to the API to add a new food truck
-  async function writeFoodTruckData() {
-    const dataForAPI = {
-      name: formData.name,
-      current_location: formData.currentLocation,
-      daily_special: formData.dailySpecial,
-      slogan: formData.slogan,
-      has_vegan_options: formData.hasVeganOptions,
-      price_level: Number(formData.priceLevel),
-      rating: Number(formData.rating),
-    };
-
-    await fetch("/api/add-one-food-truck", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dataForAPI),
-    });
-  }
-
-  // handle changes to the form inputs
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
-
-  // handle when the user submits the form
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    writeFoodTruckData();
-    alert("Thanks for submitting a new food truck!");
-  };
-
-  // render JSX for the form to the page
   return (
-    <>
-      <h1>Add Food Truck</h1>
+    <section className="form-page">
+      <div className="form-card">
+        <h1>Add Food Truck</h1>
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Food Truck Name
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-          />
-        </label>
+        <form className="food-truck-form">
+          <div className="form-group">
+            <label htmlFor="name">Food Truck Name</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Enter food truck name"
+            />
+          </div>
 
-        <label>
-          Current Location
-          <input
-            type="text"
-            name="currentLocation"
-            value={formData.currentLocation}
-            onChange={handleInputChange}
-          />
-        </label>
+          <div className="form-group">
+            <label htmlFor="location">Current Location</label>
+            <input
+              id="location"
+              name="current_location"
+              type="text"
+              placeholder="Enter current location"
+            />
+          </div>
 
-        <label>
-          Daily Special
-          <input
-            type="text"
-            name="dailySpecial"
-            value={formData.dailySpecial}
-            onChange={handleInputChange}
-          />
-        </label>
+          <div className="form-group">
+            <label htmlFor="dailySpecial">Daily Special</label>
+            <input
+              id="dailySpecial"
+              name="daily_special"
+              type="text"
+              placeholder="Enter daily special"
+            />
+          </div>
 
-        <label>
-          Slogan
-          <input
-            type="text"
-            name="slogan"
-            value={formData.slogan}
-            onChange={handleInputChange}
-          />
-        </label>
+          <div className="form-group">
+            <label htmlFor="slogan">Slogan</label>
+            <input
+              id="slogan"
+              name="slogan"
+              type="text"
+              placeholder="Enter slogan"
+            />
+          </div>
 
-        <label>
-          Has Vegan Options?
-          <select
-            name="hasVeganOptions"
-            value={formData.hasVeganOptions}
-            onChange={handleInputChange}
-          >
-            <option value="">Select</option>
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
-        </label>
+          <div className="form-group">
+            <label htmlFor="vegan">Has Vegan Options?</label>
+            <div className="select-wrapper">
+              <select id="vegan" name="has_vegan_options" defaultValue="false">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+          </div>
 
-        <label>
-          Price Level
-          <select
-            name="priceLevel"
-            value={formData.priceLevel}
-            onChange={handleInputChange}
-          >
-            <option value="1">1 (Cheap)</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5 (Expensive)</option>
-          </select>
-        </label>
+          <div className="form-group">
+            <label htmlFor="priceLevel">Price Level</label>
+            <div className="select-wrapper">
+              <select id="priceLevel" name="price_level" defaultValue="1">
+                <option value="1">1 (Cheap)</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5 (Expensive)</option>
+              </select>
+            </div>
+          </div>
 
-        <label>
-          Rating (between 0 to 5)
-          <input
-            type="number"
-            name="rating"
-            min="0"
-            max="5"
-            step="0.1"
-            value={formData.rating}
-            onChange={handleInputChange}
-          />
-        </label>
+          <div className="form-group form-group-full">
+            <label htmlFor="rating">Rating (between 0 to 5)</label>
+            <input
+              id="rating"
+              name="rating"
+              type="number"
+              min="0"
+              max="5"
+              step="0.1"
+              placeholder="0"
+            />
+          </div>
 
-        <button type="submit">Submit</button>
-      </form>
-    </>
+          <button type="submit" className="submit-button">
+            Submit
+          </button>
+        </form>
+      </div>
+    </section>
   );
 }
 
