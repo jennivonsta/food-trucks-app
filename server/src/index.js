@@ -64,11 +64,15 @@ async function getTopRatedFoodTrucks() {
 }
 
 
+
 // 6. getFoodTrucksSortedByRating()
+// this helper function gets all food trucks sorted by rating from highest to lowest
 async function getFoodTrucksSortedByRating() {
+  // runs a SQL query that orders the food trucks by rating in descending order
   const result = await db.query(
     "SELECT * FROM food_trucks ORDER BY rating DESC",
   );
+  // returns the sorted rows
   return result.rows;
 }
 
@@ -90,7 +94,34 @@ async function getFoodTrucksCount() {
   return result.rows[0];
 }
 // 9. addOneFoodTruck(name, current_location, daily_special, slogan, has_vegan_options, price_level, rating)
+// 9. addOneFoodTruck(...)
+async function addOneFoodTruck(
+  name,
+  current_location,
+  daily_special,
+  slogan,
+  has_vegan_options,
+  price_level,
+  rating,
+) {
+  const result = await db.query(
+    `INSERT INTO food_trucks
+     (name, current_location, daily_special, slogan, has_vegan_options, price_level, rating)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     RETURNING *`,
+    [
+      name,
+      current_location,
+      daily_special,
+      slogan,
+      has_vegan_options,
+      price_level,
+      rating,
+    ],
+  );
 
+  return result.rows[0];
+}
 
 // 10. deleteOneFoodTruck(id)
 
@@ -174,10 +205,14 @@ app.get("/get-top-rated-food-trucks", async (req, res) => {
 
 
 // 6. GET /get-food-trucks-sorted-by-rating
+// creates a GET route that returns food trucks sorted by rating
 app.get("/get-food-trucks-sorted-by-rating", async (req, res) => {
+  // calls the helper function that sorts the trucks by rating
   const trucks = await getFoodTrucksSortedByRating();
+  // sends the sorted trucks back as JSON
   res.json(trucks);
 });
+
 
 // 7. GET /get-food-trucks-sorted-by-price
 
@@ -192,7 +227,29 @@ app.get("/get-food-trucks-count", async (req, res) => {
   res.json(count);
 })
 // 9. POST /add-one-food-truck
+app.post("/add-one-food-truck", async (req, res) => {
+  const {
+    name,
+    current_location,
+    daily_special,
+    slogan,
+    has_vegan_options,
+    price_level,
+    rating,
+  } = req.body;
 
+  const truck = await addOneFoodTruck(
+    name,
+    current_location,
+    daily_special,
+    slogan,
+    has_vegan_options,
+    price_level,
+    rating,
+  );
+
+  res.send(`Success! ${truck.name} was added!`);
+});
 
 // 10. POST /delete-one-food-truck/:id
 
