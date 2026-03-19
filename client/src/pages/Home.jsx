@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
+import "../App.css";
 
 function Home() {
   const [foodTrucks, setFoodTrucks] = useState([]);
 
-  useEffect(() => {
-    async function fetchFoodTrucks() {
-      try {
-        const response = await fetch("http://localhost:3000/get-all-food-trucks");
-        const data = await response.json();
-        setFoodTrucks(data);
-      } catch (error) {
-        console.error("Error fetching food trucks:", error);
-      }
+  // separate function 
+  const getFoodTrucksData = async () => {
+    try {
+      const response = await fetch(
+        "/api/get-all-food-trucks"
+      );
+      const data = await response.json();
+      console.log(data);
+      setFoodTrucks(data);
+    } catch (error) {
+      console.error("Error fetching food trucks:", error);
     }
+  };
 
-    fetchFoodTrucks();
+  // useEffect ONLY calls the function
+  useEffect(() => {
+    getFoodTrucksData();
   }, []);
 
   return (
